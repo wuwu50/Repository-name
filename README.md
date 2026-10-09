@@ -1,76 +1,53 @@
-# 兔兔桌面寵物 v4 更新器原始碼
+# 兔兔桌面寵物 v4.0
 
-新增程式內版本檢查、下載進度與重新啟動套用更新。正式發行前需設定更新主機及 Mac 發行簽章，詳見 AUTO-UPDATE.md。既有 v3 須先更換正式 v4 一次。
+保留兔兔互動、抓起拖曳、拍拍、探頭、聞聞、吃草、睡覺、便便清理、自主跳動、課表、透明視窗滑鼠穿透、控制台位置記憶及桌面捷徑。原有 userData、settings-v3.json 和 calendar-cache.json 不變。
 
-# 兔兔桌面寵物 v3.0
+## 安裝與更新
 
-## 這次修改
+從本儲存庫 GitHub Releases 下載：
 
-- 右下角改成「圓圈包住三角形」的控制按鈕。
-- 點一下展開或收起所有功能；選單的 × 收起功能，「退出兔兔」關閉整個程式。
-- 按住圓形按鈕拖曳移動，放開後記住位置，下次啟動會恢復。
-- 所有功能集中在圓形按鈕：拍拍、探頭、聞聞、回到中央、吃草、睡覺、拉屎、一鍵清理、自主跳動、課表、桌面捷徑及退出。
-- 控制選單改用獨立可點擊視窗；兔兔、草盆、便便仍可互動。空白桌面可點擊其他程式，不會被透明背景遮住。
-- 課表預設隱藏，由選單「顯示課表」開啟，可切換年級／組別；時間使用 Europe/Madrid，預設五年級。
-- 首次啟動會嘗試建立桌面捷徑，也可在選單重新建立。
-- JavaScript、HTML、CSS、JSON 與測試已統一縮排排版；新增滑鼠互動與控制選單測試。
+- Windows 10／11 x64：執行 RabbitDesktop-版本-win-x64.exe 安裝。
+- Mac Apple Silicon、macOS 13 以上：開啟 RabbitDesktop-版本-mac-arm64.dmg，將 RabbitDesktop.app 拖到 Applications；另有 ZIP。
 
-## Windows
+Mac 目前是 ad-hoc 本機簽章，沒有正式 Developer ID 或 Apple 公證，可能被 Gatekeeper 阻擋。確認來源後使用系統「隱私權與安全性 → 仍要開啟」。不提供移除安全保護的腳本，也不再依賴舊 README 提及但未附帶的「安裝並啟動.command」。Windows 尚無發行者憑證，可能出現 SmartScreen 提示。
 
-適用 Windows 10／11 x64。
+正式版啟動 15 秒後、每小時檢查新版。右下角功能選單可檢查更新；Windows 可下載、顯示進度，確認「重新啟動更新」才安裝，一般退出不安裝。Mac 使用「開啟新版下載頁」，退出後手動替換；未正式簽章前不自動覆寫 App。
 
-1. 先退出舊版兔兔。
-2. 完整解壓縮，將整個資料夾放到你希望長期保留的位置；不要只搬移 exe。
-3. 雙擊 RabbitDesktop.exe。首次啟動會建立桌面的 RabbitDesktop-v3 捷徑。
-4. 之後雙擊桌面捷徑啟動。
-5. 如捷徑未建立或搬動程式資料夾，可點圓形三角按鈕 →「建立桌面啟動捷徑」。
+舊 v3 沒有更新器，需先手動安裝正式 v4 一次。僅原始碼內有更新程式不代表已下載的舊程式會自行更新。
 
-此版本未提供 Windows 發行者憑證，首次可能有 SmartScreen 提示。確認下載來源後，按「其他資訊 → 仍要執行」。
+## 原始碼與打包
 
-## Apple 晶片 Mac
-
-適用 Apple Silicon 與 macOS 13 以上。
-
-1. 先退出舊版兔兔。
-2. 完整解壓縮，app、「安裝並啟動.command」與 Entitlements.plist 保持同一個資料夾。
-3. 執行「安裝並啟動.command」。它會檢查程式資源、修復此 app 的本機簽章、移除此 app 的下載隔離標記，安裝到你的 ~/Applications/RabbitDesktop-v3.app 並開啟。
-4. 首次開啟會建立桌面的 RabbitDesktop-v3.app 捷徑，之後雙擊桌面捷徑即可啟動。
-
-如 .command 被 macOS 擋住：在「系統設定 → 隱私權與安全性」允許開啟；或開啟終端機，輸入 bash 與一個空格，拖入 .command，按 Return。
-工具不需管理員密碼、不會關閉整個系統的安全保護。只對本次下載且信任的兔兔 app 使用。
-此版本使用 ad-hoc 簽章，未有 Apple Developer ID 或官方公證，首次仍可能有安全提示。
-
-## 使用
-
-- 點圓形三角按鈕展開／收起，按住拖曳改變位置。
-- 點兔兔拍拍，按住抓起；拖曳時顯示背後的手抓住脖頸。
-- 點左下草盆叫兔兔吃草；點便便顯示掃把與畚箕掃走。
-- 四種睡姿随机切換，點兔兔或選功能可以叫醒牠。
-- 「自主跳動：暫停」停止散步與主動走去草盆；睡覺、便便與手動功能仍可使用。
-- 「顯示課表」開啟課表；選單或課表「關閉課表」可隱藏。
-- 「退出兔兔」停止全部功能；重新啟動可使用桌面捷徑。
-- Mac 選單列／Windows 系統匣也保留備用選單，包含顯示控制按鈕及退出。
-- 兔兔在主螢幕活動，控制按鈕可以拖到其他螢幕；螢幕配置改變會將控制台移回可見範圍。
-- 不會自行加入開機啟動。
-
-課表透過固定公開介面每五分鐘讀取，來源每小時更新；斷線保留上次資料並提示過期。其他桌寵功能離線可用。
-
-## 原始碼
-
-進入 rabbit-mac 資料夾後執行：
+需要 Node.js 24 和 npm，在此資料夾執行：
 
 ```sh
-npm install
+npm ci
+npm test
 npm start
-npm run format
-node tests/state-check.cjs
-node tests/controls-check.cjs
-npm run package:mac
-npm run package:windows
+npm run release:windows
+# Mac 上執行
+npm run release:mac
 ```
 
-在 Mac 上製作後，可執行 `bash packaging/sign-mac.sh` 進行本機簽章。正式 Developer ID 公證仍需自己的 Apple 開發者憑證。
+正式安裝包在 release-v4/，GitHub Releases 更新來源已固定，不需 RABBIT_UPDATE_URL。舊 package:windows、package:mac 指令保留為 portable 開發封裝，不具完整更新設定，發行請使用 release 指令。
+
+assets/ 存放圖片；tests/ 存放測試；packaging/ 存放打包、簽章與封裝驗證工具。桌寵在主螢幕活動；控制按鈕可拖曳到其他螢幕。不會加入開機啟動。課表使用 Europe/Madrid 時區，離線保留快取。
+
+## GitHub 自動打包
+
+1. 將本次完整修改提交並推送至 main。
+2. 推送到 main 後會自動啟動兩平台打包，也可到 GitHub Actions → Desktop release → Run workflow 手動重跑。
+3. 兩平台成功後，從 Artifacts 下載 desktop-windows、desktop-mac 做實機安裝測試。手動 workflow 不會公開 Release。
+4. 測試完成後，在同一提交建立 v4.0.0 標籤並推送；標籤必須與 package.json 版本一致。
+
+```sh
+git tag v4.0.0
+git push origin v4.0.0
+```
+
+兩平台打包與封裝檢查皆成功後，CI 才建立草稿 Release、上傳 EXE／DMG／ZIP／blockmap／latest.yml／latest-mac.yml，最後公開。使用 GitHub 內建 GITHUB_TOKEN，不需在客戶端放入 token。不得修改安裝包檔名或雜湊；已發布版本不覆蓋，修正時升版。
 
 ## 驗證限制
 
-已驗證功能狀態、控制台命令、收放、拖曳邊界與位置儲存、滑鼠穿透恢復、捷徑流程、封裝內容及 Mac 簽章雜湊。原生 API 使用模擬測試；製作環境為 Linux，未在實際 Windows／Mac 驗證透明視窗與系統安全提示。
+npm test 為模擬測試，涵蓋原有功能及 Windows／Mac 更新分流，不能代替實機互動。CI 額外驗證封裝依賴、資源、更新來源、版本、SHA512，以及 Mac arm64 架構／ad-hoc 簽章。尚需 GitHub CI 成功、Windows 與 Mac 實機安裝，以及兩個版本的升版測試。
+
+詳見 AUTO-UPDATE.md。

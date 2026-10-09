@@ -12,7 +12,8 @@
     "format": "prettier --write \"*.js\" \"*.html\" \"*.css\" \"*.json\" \"tests/*.cjs\"",
     "release:mac": "node packaging/build-release.cjs mac",
     "release:windows": "node packaging/build-release.cjs windows",
-    "test:updates": "node tests/updater-check.cjs"
+    "test:updates": "node tests/updater-check.cjs",
+    "test": "node tests/state-check.cjs && node tests/controls-check.cjs && node tests/dock-check.cjs && node tests/updater-check.cjs && node tests/mac-updater-check.cjs"
   },
   "devDependencies": {
     "electron": "44.5.1",
@@ -21,6 +22,7 @@
     "electron-builder": "26.15.3"
   },
   "dependencies": {
-    "electron-updater": "6.8.9"
+    "electron-updater": "6.8.9",
+    "semver": "7.7.3"
   }
 }

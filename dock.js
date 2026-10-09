@@ -98,6 +98,9 @@ function showUpdate(s) {
     "installing",
   ].includes(s.phase);
   document.querySelector("#downloadUpdate").hidden = s.phase !== "available";
+  document.querySelector("#downloadUpdate").textContent = s.manualDownload
+    ? "開啟新版下載頁"
+    : "下載更新";
   document.querySelector("#installUpdate").hidden = s.phase !== "downloaded";
 }
 async function updateAction(fn) {

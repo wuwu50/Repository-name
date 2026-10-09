@@ -30,6 +30,7 @@ const { createUpdater } = require("../updater");
     app,
     autoUpdater: engine,
     resourcesPath: root,
+    platform: "win32",
     notify: (s) => states.push(s),
   });
   service.start();
@@ -38,7 +39,7 @@ const { createUpdater } = require("../updater");
   assert.equal(service.status().phase, "disabled");
   fs.writeFileSync(
     path.join(root, "app-update.yml"),
-    "provider: generic\nurl: https://updates.example.test/rabbit/\n",
+    "provider: github\nowner: wuwu50\nrepo: Repository-name\n",
   );
   await service.check();
   assert.equal(service.status().phase, "available");
@@ -61,6 +62,7 @@ const { createUpdater } = require("../updater");
     app,
     autoUpdater: bad,
     resourcesPath: root,
+    platform: "win32",
     notify: () => {},
   });
   retry.start();

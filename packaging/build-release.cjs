@@ -1,14 +1,5 @@
 const { build, Platform } = require("electron-builder");
 const target = process.argv[2];
-const url = process.env.RABBIT_UPDATE_URL;
-if (
-  !url ||
-  new URL(url).protocol !== "https:" ||
-  url.includes("example.invalid")
-) {
-  console.error("請先設定 RABBIT_UPDATE_URL 為正式 HTTPS 更新目錄網址");
-  process.exit(1);
-}
 if (!["mac", "windows"].includes(target)) {
   console.error("使用：node packaging/build-release.cjs mac|windows");
   process.exit(1);
@@ -29,6 +20,8 @@ build({
     appId: "com.wuwu.rabbitdesktop",
     productName: "RabbitDesktop",
     directories: { output: "release-v4" },
+    artifactName: "RabbitDesktop-${version}-${os}-${arch}.${ext}",
+    npmRebuild: false,
     files: [
       "main.js",
       "preload.js",
@@ -41,10 +34,20 @@ build({
       "assets/**",
       "package.json",
     ],
-    publish: [{ provider: "generic", url: url.replace(/\/?$/, "/") }],
+    publish: [
+      {
+        provider: "github",
+        owner: "wuwu50",
+        repo: "Repository-name",
+        releaseType: "release",
+      },
+    ],
     mac: {
       category: "public.app-category.entertainment",
-      hardenedRuntime: true,
+      identity: "-",
+      hardenedRuntime: false,
+      notarize: false,
+      minimumSystemVersion: "13.0",
       entitlements: "packaging/Entitlements.plist",
       entitlementsInherit: "packaging/Entitlements.plist",
     },
