@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'none'"
+    />
+    <title>兔兔控制台</title>
+    <link rel="stylesheet" href="dock.css" />
+  </head>
+  <body>
+    <section id="panel" hidden aria-label="兔兔功能">
+      <div class="heading">
+        <strong>兔兔的桌面</strong
+        ><button id="closePanel" title="收起功能" aria-label="收起功能">
+          ×
+        </button>
+      </div>
+      <div class="actions">
+        <button data-command="pat">拍拍</button
+        ><button data-command="peek">探頭</button
+        ><button data-command="sniff">聞聞</button
+        ><button data-command="home">回到中央</button
+        ><button data-command="eat">去吃草</button
+        ><button data-command="sleep">睡覺</button
+        ><button data-command="poop">拉屎</button
+        ><button data-command="clean" id="clean">一鍵清理</button>
+      </div>
+      <button data-command="roam" id="roam">自主跳動：開啟</button
+      ><button data-command="calendar" id="calendar">顯示課表</button
+      ><button id="shortcut">建立桌面啟動捷徑</button
+      ><button id="checkUpdate">檢查更新</button
+      ><button id="downloadUpdate" hidden>下載更新</button
+      ><button id="installUpdate" hidden>重新啟動更新</button>
+      <p id="updateStatus" role="status">讀取更新狀態…</p>
+      <button id="quit">退出兔兔</button>
+      <p id="notice" role="status">點圓圈展開／收起，按住拖曳移動。</p>
+    </section>
+    <button
+      id="toggle"
+      aria-label="展開兔兔功能；按住拖曳移動"
+      aria-controls="panel"
+      aria-expanded="false"
+      title="點一下展開／收起 · 按住拖曳"
+    >
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <circle cx="32" cy="32" r="29" />
+        <path d="M27 20 L44 32 L27 44 Z" />
+      </svg>
+    </button>
+    <script src="dock.js"></script>
+  </body>
+</html>

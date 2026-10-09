@@ -1,0 +1,26 @@
+{
+  "name": "rabbit-desktop",
+  "version": "4.0.0",
+  "description": "兔兔桌面寵物",
+  "main": "main.js",
+  "author": "Wu Wu",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "electron .",
+    "package:mac": "electron-packager . RabbitDesktop --platform=darwin --arch=arm64 --out=release-v3 --overwrite --asar --app-bundle-id=com.wuwu.rabbitdesktop --ignore=release --ignore=tests",
+    "package:windows": "electron-packager . RabbitDesktop --platform=win32 --arch=x64 --out=release-v3 --overwrite --asar --ignore=release --ignore=tests",
+    "format": "prettier --write \"*.js\" \"*.html\" \"*.css\" \"*.json\" \"tests/*.cjs\"",
+    "release:mac": "node packaging/build-release.cjs mac",
+    "release:windows": "node packaging/build-release.cjs windows",
+    "test:updates": "node tests/updater-check.cjs"
+  },
+  "devDependencies": {
+    "electron": "44.5.1",
+    "@electron/packager": "19.0.1",
+    "prettier": "3.8.1",
+    "electron-builder": "26.15.3"
+  },
+  "dependencies": {
+    "electron-updater": "6.8.9"
+  }
+}
