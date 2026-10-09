@@ -23,7 +23,7 @@ careSheet.onload = () => {
 };
 sheet.src = "assets/rabbit-sheet.png";
 held.src = "assets/held-rabbit.png";
-sleepSheet.src = "assets/rabbit-sleep-sheet.png";
+  sleepSheet.src = "assets/rabbit-sleep-sheet-v4.0.1.png";
 careSheet.src = "assets/rabbit-care-sheet.png";
 sheet.onerror = () => (status.textContent = "兔兔圖片載入失敗，請重新整理。");
 let roaming = true;

@@ -8,7 +8,7 @@ Mac 尚無正式簽章：自動檢查 GitHub 最新正式 Release，驗證版本
 
 取得正式 Mac 簽章、公證資料後，需重新設定 CI 簽章與公證、通過兩版本實機更新測試，再啟用 Mac 自動安裝。憑證不可提交至原始碼。
 
-.github/workflows/check.yml 於 main push／PR 執行測試。release.yml 於 main push 自動產生兩平台測試 Artifacts，也可手動重跑；推送與版本相同的 v\* 標籤才會公開 Release。兩平台成功、更新 metadata 與檔案雜湊檢查通過後才公開；任何一個建置失敗不公開新版本。
+GitHub main push 現在會自動測試、打包，兩平台成功後公開新版 Release，讓程式找到線上更新。手動執行預設只打包，勾選 publish 才公開。已發布同版本不覆蓋；後續修改必須升版。任一平台失敗不公開新版本。
 
 舊 v3 需手動安裝 v4 一次，原有設定與課表快取保留。所有安裝包與 metadata 必須共同發布，不可只上傳 EXE 或 DMG。
 

@@ -1,13 +1,15 @@
-# 兔兔桌面寵物 v4.0
+# 兔兔桌面寵物 v4.0.1
 
 ## 下載兔兔
 
-- **Windows 10／11（x64）：[點這裡下載 Windows 版](https://github.com/wuwu50/Repository-name/actions/runs/37938023189/artifacts/11619530595)**
-- **Mac Apple Silicon（M1／M2／M3 等，macOS 13 以上）：[點這裡下載 Mac 版](https://github.com/wuwu50/Repository-name/actions/runs/37938023189/artifacts/11620450218)**
+- **Windows：[下載 Windows 安裝程式](https://github.com/wuwu50/Repository-name/releases/download/v4.0.1/RabbitDesktop-4.0.1-win-x64.exe)**
+- **Mac Apple Silicon：[下載 Mac 安裝包](https://github.com/wuwu50/Repository-name/releases/download/v4.0.1/RabbitDesktop-4.0.1-mac-arm64.dmg)**
 
-需要登入 GitHub。下載後先解壓縮：Windows 開啟裡面的 `.exe`；Mac 開啟 `.dmg`，將兔兔拖到 Applications。
+Windows 執行 EXE；Mac 開啟 DMG，將兔兔拖到 Applications。公開 Releases 下載不需登入 GitHub。
+下載連結需等本次修改推送、兩平台打包與發布成功後才可用；若顯示 404，請查看 Actions。
+Mac 尚無正式 Developer ID／公證，首次開啟可能需要系統允許。
 
-以上是已通過建置與封裝檢查的 v4.0.0 測試安裝包，目前尚未公開正式 Release。這些 Actions 下載檔會依儲存期限到期；正式發行後會改用 Releases 永久下載連結。Mac 尚無正式 Developer ID 簽章／公證，首次開啟可能需要在系統允許。
+v4.0.1 修正側躺睡姿多出第三隻耳朵，保留四種睡姿。Windows 可在程式內檢查、下載、確認後安裝更新；Mac 自動檢查新版並開啟下載頁，需手動替換。
 
 保留兔兔互動、抓起拖曳、拍拍、探頭、聞聞、吃草、睡覺、便便清理、自主跳動、課表、透明視窗滑鼠穿透、控制台位置記憶及桌面捷徑。原有 userData、settings-v3.json 和 calendar-cache.json 不變。
 
@@ -41,19 +43,14 @@ npm run release:mac
 
 assets/ 存放圖片；tests/ 存放測試；packaging/ 存放打包、簽章與封裝驗證工具。桌寵在主螢幕活動；控制按鈕可拖曳到其他螢幕。不會加入開機啟動。課表使用 Europe/Madrid 時區，離線保留快取。
 
-## GitHub 自動打包
+## GitHub 自動打包與線上更新
 
-1. 將本次完整修改提交並推送至 main。
-2. 推送到 main 後會自動啟動兩平台打包，也可到 GitHub Actions → Desktop release → Run workflow 手動重跑。
-3. 兩平台成功後，從 Artifacts 下載 desktop-windows、desktop-mac 做實機安裝測試。手動 workflow 不會公開 Release。
-4. 測試完成後，在同一提交建立 v4.0.0 標籤並推送；標籤必須與 package.json 版本一致。
+1. 在 GitHub Desktop 提交修改並 Push origin 到 main。
+2. GitHub 自動測試、打包 Windows 與 Mac，檢查封裝、更新資訊與雜湊。
+3. 兩平台都成功後自動建立版本標籤、公開 GitHub Release，不需另外手動建立標籤。
+4. 已安裝 v4 的 Windows 使用者可按「檢查更新 → 下載更新 → 重新啟動更新」。Mac 使用「開啟新版下載頁」下載後替換。
 
-```sh
-git tag v4.0.0
-git push origin v4.0.0
-```
-
-兩平台打包與封裝檢查皆成功後，CI 才建立草稿 Release、上傳 EXE／DMG／ZIP／blockmap／latest.yml／latest-mac.yml，最後公開。使用 GitHub 內建 GITHUB_TOKEN，不需在客戶端放入 token。不得修改安裝包檔名或雜湊；已發布版本不覆蓋，修正時升版。
+手動 Run workflow 預設只打包；勾選 publish 才公開。每次修改程式或圖片都需要提高 package.json 與 package-lock.json 版本。已公開版本不覆蓋；同版本推送只建置、不替換既有 Release。發行使用 GitHub 內建 GITHUB_TOKEN，不把 token 放入安裝包。
 
 ## 驗證限制
 

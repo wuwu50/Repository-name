@@ -23,6 +23,7 @@ async function main() {
     "assets/held-rabbit.png",
     "assets/rabbit-care-sheet.png",
     "assets/rabbit-sleep-sheet.png",
+    "assets/rabbit-sleep-sheet-v4.0.1.png",
     "assets/background.png",
     "node_modules/electron-updater/package.json",
     "node_modules/semver/package.json",

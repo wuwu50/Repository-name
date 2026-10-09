@@ -4,6 +4,11 @@ on:
     branches: ["main"]
     tags: ["v*"]
   workflow_dispatch:
+    inputs:
+      publish:
+        description: "公開此版本到 GitHub Releases"
+        type: boolean
+        default: false
 permissions:
   contents: read
 concurrency:
@@ -55,12 +60,21 @@ jobs:
             release-v4/*.blockmap
             release-v4/latest*.yml
   publish:
-    if: startsWith(github.ref, 'refs/tags/')
+    if: github.event_name == 'push' || inputs.publish
+    concurrency:
+      group: desktop-publish-${{ github.repository }}
+      cancel-in-progress: false
     needs: build
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v4
+      - name: Read version from the exact built commit
+        id: version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "tag=v${VERSION}" >> "$GITHUB_OUTPUT"
       - uses: actions/download-artifact@v4
         with:
           path: release
@@ -77,13 +91,14 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-          RELEASE_TAG: ${{ github.ref_name }}
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
+          RELEASE_COMMIT: ${{ github.sha }}
         shell: bash
         run: |
           if gh release view "$RELEASE_TAG" --json isDraft --jq .isDraft > draft.txt 2>/dev/null; then
-            test "$(cat draft.txt)" = true || { echo 'Published releases are immutable; use a new version.'; exit 1; }
+            test "$(cat draft.txt)" = true || { echo 'This version is already published; skipping without overwriting it.'; exit 0; }
           else
-            gh release create "$RELEASE_TAG" --verify-tag --draft --title "兔兔桌面寵物 $RELEASE_TAG" --notes 'Windows：下載 win-x64.exe 安裝，程式內檢查、下載並確認重新啟動安裝。Mac Apple Silicon：下載 mac-arm64.dmg，拖曳至 Applications；目前為 ad-hoc 簽章，無 Developer ID／公證，自動檢查新版後需手動下載替換。舊 v3 需先手動安裝正式 v4 一次。'
+            gh release create "$RELEASE_TAG" --target "$RELEASE_COMMIT" --draft --title "兔兔桌面寵物 $RELEASE_TAG" --notes 'Windows：下載 win-x64.exe 安裝，程式內檢查、下載並確認重新啟動安裝。Mac Apple Silicon：下載 mac-arm64.dmg，拖曳至 Applications；目前為 ad-hoc 簽章，無 Developer ID／公證，自動檢查新版後需手動下載替換。舊 v3 需先手動安裝正式 v4 一次。'
           fi
           gh release upload "$RELEASE_TAG" release/* --clobber
           gh release edit "$RELEASE_TAG" --draft=false --latest
