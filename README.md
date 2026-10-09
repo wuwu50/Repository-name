@@ -1,5 +1,14 @@
 # 兔兔桌面寵物 v4.0
 
+## 下載兔兔
+
+- **Windows 10／11（x64）：[點這裡下載 Windows 版](https://github.com/wuwu50/Repository-name/actions/runs/37938023189/artifacts/11619530595)**
+- **Mac Apple Silicon（M1／M2／M3 等，macOS 13 以上）：[點這裡下載 Mac 版](https://github.com/wuwu50/Repository-name/actions/runs/37938023189/artifacts/11620450218)**
+
+需要登入 GitHub。下載後先解壓縮：Windows 開啟裡面的 `.exe`；Mac 開啟 `.dmg`，將兔兔拖到 Applications。
+
+以上是已通過建置與封裝檢查的 v4.0.0 測試安裝包，目前尚未公開正式 Release。這些 Actions 下載檔會依儲存期限到期；正式發行後會改用 Releases 永久下載連結。Mac 尚無正式 Developer ID 簽章／公證，首次開啟可能需要在系統允許。
+
 保留兔兔互動、抓起拖曳、拍拍、探頭、聞聞、吃草、睡覺、便便清理、自主跳動、課表、透明視窗滑鼠穿透、控制台位置記憶及桌面捷徑。原有 userData、settings-v3.json 和 calendar-cache.json 不變。
 
 ## 安裝與更新
