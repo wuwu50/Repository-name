@@ -109,23 +109,25 @@ async function main() {
   };
   const context = {
     require: (n) =>
-      n === "./studio-service"
-        ? { createStudio: () => ({ status: () => ({ references: 10 }) }) }
-        : n === "electron"
-          ? electron
-          : n === "fs"
-            ? fakefs
-            : n === "electron-updater"
-              ? { autoUpdater: {} }
-              : n === "./updater"
-                ? {
-                    createUpdater: () => ({
-                      start() {},
-                      stop() {},
-                      status: () => ({ phase: "disabled" }),
-                    }),
-                  }
-                : require(n),
+      n === "./local-ai"
+        ? { createLocalAI: () => ({ stop() {} }) }
+        : n === "./studio-service"
+          ? { createStudio: () => ({ status: () => ({ references: 10 }) }) }
+          : n === "electron"
+            ? electron
+            : n === "fs"
+              ? fakefs
+              : n === "electron-updater"
+                ? { autoUpdater: {} }
+                : n === "./updater"
+                  ? {
+                      createUpdater: () => ({
+                        start() {},
+                        stop() {},
+                        status: () => ({ phase: "disabled" }),
+                      }),
+                    }
+                  : require(n),
     process: {
       platform: "win32",
       execPath: "C:/RabbitDesktop/RabbitDesktop.exe",

@@ -151,3 +151,6 @@ release-v3/
 release-v4/
 
 .studio-references/
+
+__pycache__/
+*.pyc

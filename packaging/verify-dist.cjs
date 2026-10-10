@@ -13,11 +13,17 @@ async function main() {
   for (const file of [
     "main.js",
     "updater.js",
+    "mac-installer.js",
     "preload.js",
     "pet.js",
     "dock.js",
     "studio.js",
     "studio-service.js",
+    "local-ai.js",
+    "local-ai-hardware.js",
+    "local-ai-workflow.js",
+    "local-ai-manifest.js",
+    "local-ai-helper.py",
     "studio-themes.js",
     "studio.html",
     "studio.css",
@@ -43,6 +49,16 @@ async function main() {
       "PASS packaged runtime and preserved assets (installer and feed not checked)",
     );
     return;
+  }
+  if (mac) {
+    const pkg = path.join(
+      "release-v4",
+      "RabbitDesktop-" + require("../package.json").version + "-mac-arm64.pkg",
+    );
+    assert.equal(
+      crypto.createHash("sha512").update(fs.readFileSync(pkg)).digest("hex"),
+      fs.readFileSync(pkg + ".sha512", "utf8").trim(),
+    );
   }
   const config = yaml.load(
     fs.readFileSync(path.join(resources, "app-update.yml"), "utf8"),

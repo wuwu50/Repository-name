@@ -139,3 +139,30 @@ summary {
     padding: 18px;
   }
 }
+
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddc4ae;
+  border-radius: 10px;
+  background: #fffcf8;
+  font: inherit;
+  color: inherit;
+}
+#hardware {
+  white-space: pre-line;
+  font-size: 12px;
+  line-height: 1.6;
+}
+#localSetup {
+  padding: 12px;
+  border-radius: 12px;
+  background: #fff8ef;
+}
+#localStatus {
+  font-size: 12px;
+}
+progress {
+  width: 100%;
+  accent-color: #926447;
+}

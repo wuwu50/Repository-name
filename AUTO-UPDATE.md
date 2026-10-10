@@ -1,15 +1,13 @@
-# 兔兔 v4 更新與發行設定
+# 兔兔更新與發行設定
 
-更新來源是公開 GitHub 儲存庫 wuwu50/Repository-name 的正式 Releases。已不使用 generic 更新主機或 RABBIT_UPDATE_URL。
+更新來源固定為公開 GitHub 儲存庫 wuwu50/Repository-name 的正式 Releases，不接受 UI 傳入任意網址。
 
-Windows 保留「檢查更新」「下載更新」「重新啟動更新」功能：自動檢查、不自動下載；下載進度可見；下載完成、使用者點選後才安裝，一般退出不安裝。使用 NSIS、electron-updater 與 builder 產生的 app-update.yml／latest.yml。
+Windows 保留自動檢查、手動下載及「重新啟動更新」確認安裝；一般退出不安裝。使用 NSIS 與 electron-updater。
 
-Mac 尚無正式簽章：自動檢查 GitHub 最新正式 Release，驗證版本較新且 arm64 DMG 已存在後顯示下載按鈕。按鈕開啟固定的 GitHub 發行頁，下載後退出並替換 Applications 中的 App；不呼叫 Squirrel.Mac 自動安裝，也不允許 UI 傳入任意更新網址。封裝使用 ad-hoc 簽章，沒有 Developer ID／Apple 公證。
+Mac 4.2.1 起：檢查較新的正式版本，且 PKG 與 SHA512 校驗檔皆存在才提供「下載並安裝新版」。下載後校驗內容與檔案格式，交給 Mac 系統安裝程式，退出兔兔以便更新。系統可能要求確認與管理員密碼；無需拖曳 App。安裝到 /Applications/RabbitDesktop.app，安裝完成嘗試重新開啟。下載或開啟失敗可重試，不刪除既有 App 或使用者設定。
 
-取得正式 Mac 簽章、公證資料後，需重新設定 CI 簽章與公證、通過兩版本實機更新測試，再啟用 Mac 自動安裝。憑證不可提交至原始碼。
+Mac App 使用 ad-hoc 簽章；PKG 無正式簽章，沒有 Developer ID 或公證。系統安全性仍可能阻擋，須依系統提示允許。此流程不是 Squirrel.Mac 無人值守安裝。不移除 Gatekeeper 保護。
 
-GitHub main push 現在會自動測試、打包，兩平台成功後公開新版 Release，讓程式找到線上更新。手動執行預設只打包，勾選 publish 才公開。已發布同版本不覆蓋；後續修改必須升版。任一平台失敗不公開新版本。
+舊版 Mac 請先手動開啟新 PKG 安裝一次，之後新版可從程式內下載並安裝。設定與課表快取保留。
 
-舊 v3 需手動安裝 v4 一次，原有設定與課表快取保留。所有安裝包與 metadata 必須共同發布，不可只上傳 EXE 或 DMG。
-
-完整操作步驟見 README.md。
+main push 會自動測試與打包，兩平台皆成功才發布新版本；不覆蓋既有版本。Mac PKG 與其 SHA512 檔必須一同發布。實際 Mac 安裝與跨版本更新仍需實機驗證。

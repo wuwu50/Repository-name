@@ -55,6 +55,8 @@ jobs:
           if-no-files-found: error
           path: |
             release-v4/*.exe
+            release-v4/*.pkg
+            release-v4/*.pkg.sha512
             release-v4/*.dmg
             release-v4/*.zip
             release-v4/*.blockmap
@@ -87,6 +89,8 @@ jobs:
           compgen -G 'release/*-win-x64.exe'
           compgen -G 'release/*-mac-arm64.dmg'
           compgen -G 'release/*-mac-arm64.zip'
+          compgen -G 'release/*-mac-arm64.pkg'
+          compgen -G 'release/*-mac-arm64.pkg.sha512'
       - name: Publish only after both platforms succeed
         env:
           GH_TOKEN: ${{ github.token }}
@@ -98,7 +102,7 @@ jobs:
           if gh release view "$RELEASE_TAG" --json isDraft --jq .isDraft > draft.txt 2>/dev/null; then
             test "$(cat draft.txt)" = true || { echo 'This version is already published; skipping without overwriting it.'; exit 0; }
           else
-            gh release create "$RELEASE_TAG" --target "$RELEASE_COMMIT" --draft --title "兔兔桌面寵物 $RELEASE_TAG" --notes 'Windows：下載 win-x64.exe 安裝，程式內檢查、下載並確認重新啟動安裝。Mac Apple Silicon：下載 mac-arm64.dmg，拖曳至 Applications；目前為 ad-hoc 簽章，無 Developer ID／公證，自動檢查新版後需手動下載替換。舊 v3 需先手動安裝正式 v4 一次。'
+            gh release create "$RELEASE_TAG" --target "$RELEASE_COMMIT" --draft --title "兔兔桌面寵物 $RELEASE_TAG" --notes 'Windows：下載 win-x64.exe 安裝，程式內檢查、下載並確認重新啟動安裝。Mac Apple Silicon：下載 mac-arm64.pkg，使用系統安裝程式，不需拖曳。新版本可在程式內下載並開啟安裝；依系統提示確認或輸入管理員密碼。目前仍無 Developer ID／公證。舊 v3 需先手動安裝正式 v4 一次。'
           fi
           gh release upload "$RELEASE_TAG" release/* --clobber
           gh release edit "$RELEASE_TAG" --draft=false --latest

@@ -17,7 +17,7 @@ function readKey(file) {
     return "";
   }
 }
-function createStudio({ root, userData, fetchImpl = fetch }) {
+function createStudio({ root, userData, fetchImpl = fetch, localAI }) {
   const folder = path.join(userData, "rabbit-studio"),
     refs = path.join(folder, "references"),
     historyFile = path.join(folder, "themes.json");
@@ -87,13 +87,27 @@ function createStudio({ root, userData, fetchImpl = fetch }) {
     if (prompt.length > 2000) throw Error("要求最多 2000 字。");
     const token = key(),
       files = referenceFiles();
-    if (!token) throw Error("請先匯入金鑰設定檔。");
+    const mode = input?.mode === "cloud" ? "cloud" : "local";
+    if (mode === "cloud" && !token) throw Error("請先匯入金鑰設定檔。");
     if (!files.length) throw Error("請先匯入兔兔照片。");
     busy = true;
     try {
       const selected =
         typeof input?.theme === "string" ? input.theme.slice(0, 200) : "";
       if (!prompt && !selected) throw Error("請輸入要求或選擇隨機主題。");
+      if (mode === "local") {
+        if (!localAI) throw Error("請先安裝並啟動本機生圖。");
+        const bytes = await localAI.generate({
+          files: files.map((file) => path.join(refs, file)),
+          text: [selected, prompt].filter(Boolean).join("。"),
+        });
+        last = bytes;
+        fs.writeFileSync(path.join(folder, "latest.png"), bytes);
+        return {
+          image: "data:image/png;base64," + bytes.toString("base64"),
+          theme: selected || "自訂主題",
+        };
+      }
       const form = new FormData();
       form.append("model", "gpt-image-1.5");
       form.append("n", "1");

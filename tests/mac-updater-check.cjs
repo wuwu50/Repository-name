@@ -1,19 +1,21 @@
-const assert = require("node:assert/strict");
-const fs = require("node:fs");
-const os = require("node:os");
-const path = require("node:path");
+const assert = require("node:assert/strict"),
+  fs = require("node:fs"),
+  os = require("node:os"),
+  path = require("node:path");
 const { createUpdater } = require("../updater");
 (async () => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "rabbit-mac-updates-"));
   let release,
     requests = 0,
-    opened = [];
+    downloads = 0,
+    installs = 0,
+    fail = false;
   fs.writeFileSync(
     path.join(root, "app-update.yml"),
     "provider: github\nowner: wuwu50\nrepo: Repository-name\n",
   );
   const service = createUpdater({
-    app: { isPackaged: true, getVersion: () => "4.0.0" },
+    app: { isPackaged: true, getVersion: () => "4.2.1" },
     platform: "darwin",
     resourcesPath: root,
     notify: () => {},
@@ -21,50 +23,59 @@ const { createUpdater } = require("../updater");
       {},
       {
         get() {
-          throw Error("Unsigned Mac must not use native installer");
+          throw Error("Mac must not invoke Squirrel");
         },
       },
     ),
     fetchRelease: async () => {
       requests++;
-      return { ok: true, status: 200, json: async () => release };
+      return { ok: true, json: async () => release };
     },
-    openExternal: async (url) => opened.push(url),
+    macInstaller: {
+      download: async (version, notify) => {
+        assert.equal(version, "4.2.2");
+        downloads++;
+        notify(50);
+      },
+      install: async () => {
+        installs++;
+        if (fail) throw Error("handoff failed");
+        return true;
+      },
+    },
   });
   service.start();
   try {
     release = {
-      tag_name: "v4.1.0",
-      assets: [{ name: "RabbitDesktop-4.1.0-mac-arm64.dmg" }],
+      tag_name: "v4.2.2",
+      assets: [
+        { name: "RabbitDesktop-4.2.2-mac-arm64.pkg" },
+        { name: "RabbitDesktop-4.2.2-mac-arm64.pkg.sha512" },
+      ],
     };
     await Promise.all([service.check(), service.check()]);
     assert.equal(requests, 1);
     assert.equal(service.status().phase, "available");
-    assert.equal(service.status().manualDownload, true);
-    assert.equal(service.install(), false);
+    assert.equal(service.status().installerMode, true);
+    fail = true;
     await service.download();
-    assert.deepEqual(opened, [
-      "https://github.com/wuwu50/Repository-name/releases/tag/v4.1.0",
-    ]);
-    for (const tag of ["v3.0.0", "v4.0.0", "bad", "v4.2.0-beta.1"]) {
-      release.tag_name = tag;
-      await service.check();
-      assert.equal(service.status().phase, "current");
-    }
-    release = { tag_name: "v4.2.0", assets: [] };
-    await service.check();
-    assert.equal(service.status().phase, "current");
-    assert.equal(service.install(), false);
+    assert.equal(downloads, 1);
+    assert.equal(installs, 1);
+    assert.equal(service.status().phase, "downloaded");
+    fail = false;
+    assert.equal(await service.install(), true);
+    assert.equal(service.status().phase, "installing");
     console.log(
-      "PASS Mac updates: no native install, newer complete stable release only, download link, concurrency",
+      "PASS Mac update download, installer handoff, retry, concurrency",
     );
   } finally {
     service.stop();
-    const resolvedRoot = fs.realpathSync(root);
-    assert(resolvedRoot.startsWith(fs.realpathSync(os.tmpdir()) + path.sep));
-    fs.rmSync(resolvedRoot, { recursive: true, force: true });
+    assert(
+      fs.realpathSync(root).startsWith(fs.realpathSync(os.tmpdir()) + path.sep),
+    );
+    fs.rmSync(root, { recursive: true, force: true });
   }
-})().catch((error) => {
-  console.error(error);
+})().catch((e) => {
+  console.error(e);
   process.exitCode = 1;
 });

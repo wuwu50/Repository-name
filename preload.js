@@ -1,5 +1,11 @@
 const { contextBridge, ipcRenderer } = require("electron");
 contextBridge.exposeInMainWorld("desktopPet", {
+  localAIStatus: () => ipcRenderer.invoke("local-ai-status"),
+  localAIInstall: () => ipcRenderer.invoke("local-ai-install"),
+  localAIStart: () => ipcRenderer.invoke("local-ai-start"),
+  localAIStop: () => ipcRenderer.invoke("local-ai-stop"),
+  localAICancel: () => ipcRenderer.invoke("local-ai-cancel"),
+  onLocalAI: (fn) => ipcRenderer.on("local-ai-state", (_, value) => fn(value)),
   studioOpen: () => ipcRenderer.invoke("studio-open"),
   studioStatus: () => ipcRenderer.invoke("studio-status"),
   studioTheme: () => ipcRenderer.invoke("studio-theme"),

@@ -1,3 +1,8 @@
+if (process.platform === "darwin")
+  require("fs").chmodSync(
+    require("path").join(__dirname, "pkg-scripts/postinstall"),
+    0o755,
+  );
 const { build, Platform } = require("electron-builder");
 const target = process.argv[2];
 if (!["mac", "windows"].includes(target)) {
@@ -8,7 +13,7 @@ build({
   targets:
     target === "mac"
       ? Platform.MAC.createTarget(
-          ["dmg", "zip"],
+          ["dmg", "zip", "pkg"],
           require("electron-builder").Arch.arm64,
         )
       : Platform.WINDOWS.createTarget(
@@ -26,11 +31,17 @@ build({
       "main.js",
       "preload.js",
       "updater.js",
+      "mac-installer.js",
       "pet.js",
       "calendar-ui.js",
       "dock.js",
       "studio.js",
       "studio-service.js",
+      "local-ai.js",
+      "local-ai-hardware.js",
+      "local-ai-workflow.js",
+      "local-ai-manifest.js",
+      "local-ai-helper.py",
       "studio-themes.js",
       "*.html",
       "*.css",
@@ -45,6 +56,16 @@ build({
         releaseType: "release",
       },
     ],
+    pkg: {
+      identity: null,
+      installLocation: "/Applications",
+      allowAnywhere: false,
+      allowCurrentUserHome: false,
+      isRelocatable: false,
+      overwriteAction: "upgrade",
+      mustClose: ["com.wuwu.rabbitdesktop"],
+      scripts: require("path").join(__dirname, "pkg-scripts"),
+    },
     mac: {
       category: "public.app-category.entertainment",
       identity: "-",
@@ -63,7 +84,27 @@ build({
       deleteAppDataOnUninstall: false,
     },
   },
-}).catch((error) => {
-  console.error(error.message);
-  process.exitCode = 1;
-});
+})
+  .then(() => {
+    if (target === "mac") {
+      const fs = require("fs"),
+        path = require("path"),
+        crypto = require("crypto");
+      for (const name of fs
+        .readdirSync("release-v4")
+        .filter((x) => x.endsWith(".pkg"))) {
+        const file = path.join("release-v4", name);
+        fs.writeFileSync(
+          file + ".sha512",
+          crypto
+            .createHash("sha512")
+            .update(fs.readFileSync(file))
+            .digest("hex") + "\n",
+        );
+      }
+    }
+  })
+  .catch((error) => {
+    console.error(error.message);
+    process.exitCode = 1;
+  });

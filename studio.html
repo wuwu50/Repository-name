@@ -19,6 +19,23 @@
       </header>
       <div class="layout">
         <section class="controls">
+          <h2>免費本機生圖</h2>
+          <section id="localSetup" aria-label="本機生圖設定">
+            <p id="hardware">正在偵測這台電腦…</p>
+            <p id="localStatus" role="status" aria-live="polite">
+              準備本機生圖。
+            </p>
+            <progress id="localProgress" max="100" hidden></progress>
+            <button id="installLocal" disabled>安裝適合這台電腦的工具</button>
+            <button id="startLocal" disabled>啟動本機生圖</button>
+            <button id="stopLocal" hidden>停止本機生圖</button>
+            <button id="cancelLocal" hidden>取消目前操作</button>
+          </section>
+          <label for="mode">生成方式</label>
+          <select id="mode">
+            <option value="local">免費本機生成</option>
+            <option value="cloud">OpenAI 雲端（另計費）</option>
+          </select>
           <h2>今天想去哪裡？</h2>
           <button id="random">🎲 換個隨機主題</button>
           <p id="theme">可選隨機主題，或直接輸入你的想法。</p>
@@ -31,14 +48,14 @@
           ></textarea
           ><button id="generate" class="primary">生成圖片</button>
           <p class="hint">
-            每次生成會上傳參考照片與要求至 OpenAI，依 API
-            用量計費。外觀會盡量保留，結果仍可能有差異。
+            本機模式不需 API
+            金鑰，不上傳照片。中文要求會在本機翻譯。圖片會盡量保留兔兔特徵，仍可能有差異。
           </p>
           <details>
             <summary>照片與連線設定</summary>
             <p id="config"></p>
             <button id="photos">匯入兔兔照片（最多10張）</button
-            ><button id="key">匯入金鑰設定檔</button>
+            ><button id="key" hidden>匯入雲端金鑰設定檔</button>
             <p class="hint">照片與金鑰只儲存在這台電腦。換電腦時需重新匯入。</p>
           </details>
           <p id="status" role="status" aria-live="polite">準備好開始創作。</p>

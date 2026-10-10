@@ -11,14 +11,22 @@ function createUpdater({
   resourcesPath = process.resourcesPath,
   platform = process.platform,
   fetchRelease = (...args) => require("electron").net.fetch(...args),
-  openExternal = (url) => require("electron").shell.openExternal(url),
+  macInstaller,
 }) {
   let state = {
     phase: "disabled",
     currentVersion: app.getVersion(),
     message: "此版本尚未設定更新來源",
-    manualDownload: platform === "darwin",
+    manualDownload: false,
+    installerMode: platform === "darwin",
   };
+  let mac = macInstaller;
+  const macService = () =>
+    mac ||
+    (mac = require("./mac-installer").createMacInstaller({
+      app,
+      fetchRelease,
+    }));
   let checking = false,
     downloading = false,
     started = false,
@@ -83,14 +91,17 @@ function createUpdater({
         const complete =
           Array.isArray(release.assets) &&
           release.assets.some(
-            (a) => a.name === `RabbitDesktop-${version}-mac-arm64.dmg`,
+            (a) => a.name === `RabbitDesktop-${version}-mac-arm64.pkg`,
+          ) &&
+          release.assets.some(
+            (a) => a.name === `RabbitDesktop-${version}-mac-arm64.pkg.sha512`,
           );
         send(
           available && complete
             ? {
                 phase: "available",
                 version,
-                message: `新版 ${version} 可下載；Mac 需退出後手動替換`,
+                message: `新版 ${version} 可下載並安裝，不需拖曳檔案`,
               }
             : {
                 phase: "current",
@@ -116,16 +127,33 @@ function createUpdater({
     if (!started || state.phase !== "available" || downloading)
       return { ...state };
     if (platform === "darwin") {
+      downloading = true;
+      send({
+        phase: "downloading",
+        message: "正在下載 Mac 安裝包…",
+        percent: 0,
+      });
       try {
-        await openExternal(
-          `https://github.com/wuwu50/Repository-name/releases/tag/v${state.version}`,
+        await macService().download(state.version, (percent) =>
+          send({
+            phase: "downloading",
+            percent,
+            message: "正在下載 Mac 安裝包…",
+          }),
         );
         send({
-          message:
-            "已開啟下載頁；下載 DMG 後退出兔兔，再替換 Applications 中的程式",
+          phase: "downloaded",
+          percent: 100,
+          message: "下載完成，正在開啟 Mac 安裝程式…",
         });
+        await install();
       } catch {
-        send({ phase: "error", message: "無法開啟下載頁，請重新檢查更新" });
+        send({
+          phase: state.phase === "downloaded" ? "downloaded" : "error",
+          message: "下載或開啟安裝失敗；原版本仍可使用，可重試。",
+        });
+      } finally {
+        downloading = false;
       }
       return { ...state };
     }
@@ -144,7 +172,22 @@ function createUpdater({
     return { ...state };
   }
   function install() {
-    if (platform === "darwin" || state.phase !== "downloaded") return false;
+    if (state.phase !== "downloaded") return false;
+    if (platform === "darwin")
+      return macService()
+        .install()
+        .then((result) => {
+          if (result)
+            send({
+              phase: "installing",
+              message: "Mac 安裝程式已開啟，請依系統提示完成；不需拖曳檔案。",
+            });
+          return result;
+        })
+        .catch(() => {
+          send({ phase: "downloaded", message: "無法開啟安裝程式，請重試。" });
+          return false;
+        });
     send({ phase: "installing", message: "正在重新啟動並套用更新…" });
     // The updater launches the installer then exits; no manual file deletion.
     autoUpdater.quitAndInstall(false, true);

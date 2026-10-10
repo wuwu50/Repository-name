@@ -14,7 +14,8 @@ const path = require("path"),
 const { autoUpdater } = require("electron-updater");
 const { createUpdater } = require("./updater");
 let updater;
-let studioWindow, studio;
+let studioWindow, studio, localAI;
+const { createLocalAI } = require("./local-ai");
 const { createStudio } = require("./studio-service");
 function openStudio() {
   if (studioWindow && !studioWindow.isDestroyed()) {
@@ -238,7 +239,16 @@ if (locked)
       if (!controlTrusted(event)) throw Error("拒絕存取");
       return updater.install();
     });
+    localAI = createLocalAI({
+      root: __dirname,
+      userData: app.getPath("userData"),
+      notify: (value) => {
+        if (studioWindow && !studioWindow.isDestroyed())
+          studioWindow.webContents.send("local-ai-state", value);
+      },
+    });
     studio = createStudio({
+      localAI,
       root: __dirname,
       userData: app.getPath("userData"),
     });
@@ -267,6 +277,36 @@ if (locked)
         return fn(...args);
       });
     studioHandler("studio-status", () => studio.status());
+    studioHandler("local-ai-status", () => localAI.status());
+    studioHandler("local-ai-install", async () => {
+      const status = await localAI.status();
+      if (!status.hardware.supported) throw Error(status.hardware.message);
+      const answer = await dialog.showMessageBox(studioWindow, {
+        type: "question",
+        title: "安裝免費本機生圖",
+        message: "為這台電腦安裝生圖工具與模型？",
+        detail:
+          status.hardware.label +
+          "\n" +
+          status.hardware.model +
+          "\n需預留約28 GB；首次下載約8～15 GB，依運算套件而異。安裝後生成不收 API 費用。\n" +
+          status.hardware.message,
+        buttons: ["取消", "確認下載並安裝"],
+        defaultId: 0,
+        cancelId: 0,
+      });
+      if (answer.response !== 1) return localAI.status();
+      return localAI.install();
+    });
+    studioHandler("local-ai-start", () => localAI.start());
+    studioHandler("local-ai-stop", () => {
+      localAI.stop();
+      return localAI.status();
+    });
+    studioHandler("local-ai-cancel", () => {
+      localAI.cancel();
+      return true;
+    });
     studioHandler("studio-theme", () => studio.randomTheme());
     studioHandler("studio-generate", (input) => studio.generate(input));
     studioHandler("studio-photos", async () => {
@@ -505,6 +545,7 @@ if (locked)
   });
 app.on("before-quit", () => {
   updater?.stop();
+  localAI?.stop();
   clearInterval(timer);
   tray?.destroy();
 });
