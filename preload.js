@@ -1,5 +1,12 @@
 const { contextBridge, ipcRenderer } = require("electron");
 contextBridge.exposeInMainWorld("desktopPet", {
+  studioOpen: () => ipcRenderer.invoke("studio-open"),
+  studioStatus: () => ipcRenderer.invoke("studio-status"),
+  studioTheme: () => ipcRenderer.invoke("studio-theme"),
+  studioGenerate: (input) => ipcRenderer.invoke("studio-generate", input),
+  studioPhotos: () => ipcRenderer.invoke("studio-photos"),
+  studioKey: () => ipcRenderer.invoke("studio-key"),
+  studioSave: () => ipcRenderer.invoke("studio-save"),
   updateStatus: () => ipcRenderer.invoke("update-status"),
   checkUpdate: () => ipcRenderer.invoke("update-check"),
   downloadUpdate: () => ipcRenderer.invoke("update-download"),

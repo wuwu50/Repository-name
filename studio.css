@@ -1,0 +1,141 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: #fffaf4;
+  color: #543d34;
+  font:
+    15px system-ui,
+    "Microsoft JhengHei",
+    sans-serif;
+}
+main {
+  max-width: 1100px;
+  margin: auto;
+  padding: 28px;
+}
+header span {
+  color: #997652;
+  font-size: 13px;
+}
+h1 {
+  font-size: 28px;
+  margin: 8px 0;
+}
+header p,
+.hint {
+  color: #876b5b;
+}
+h2 {
+  font-size: 18px;
+}
+.layout {
+  display: grid;
+  grid-template-columns: 310px 1fr;
+  gap: 24px;
+  margin-top: 24px;
+}
+.controls,
+.preview {
+  background: white;
+  border: 1px solid #ead9c7;
+  border-radius: 20px;
+  padding: 22px;
+}
+button,
+textarea {
+  font: inherit;
+  border: 1px solid #ddc4ae;
+  border-radius: 10px;
+  padding: 12px;
+  color: inherit;
+}
+button {
+  cursor: pointer;
+  background: #fff8ef;
+  width: 100%;
+  margin: 6px 0;
+}
+button:hover {
+  background: #f1e0d1;
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.primary {
+  background: #926447;
+  color: white;
+  border: 0;
+}
+label {
+  display: block;
+  margin: 18px 0 10px;
+}
+textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 100px;
+  background: #fffcf8;
+}
+.hint {
+  font-size: 12px;
+  line-height: 1.6;
+}
+#theme {
+  font-weight: 600;
+  line-height: 1.6;
+}
+#status {
+  font-size: 13px;
+  line-height: 1.6;
+}
+summary {
+  cursor: pointer;
+  margin-top: 20px;
+}
+.preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 460px;
+}
+#image {
+  width: 100%;
+  max-height: 550px;
+  object-fit: contain;
+  border-radius: 12px;
+}
+#empty {
+  text-align: center;
+  color: #a68b75;
+  font-size: 60px;
+}
+#empty p {
+  font-size: 15px;
+}
+#download {
+  margin-top: 18px;
+  width: auto;
+  min-width: 180px;
+}
+[hidden] {
+  display: none !important;
+}
+:focus-visible {
+  outline: 2px solid #985c38;
+  outline-offset: 3px;
+}
+@media (max-width: 760px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  .preview {
+    min-height: 300px;
+  }
+  main {
+    padding: 18px;
+  }
+}

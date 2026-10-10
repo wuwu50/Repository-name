@@ -7,12 +7,48 @@ const {
   Menu,
   nativeImage,
   shell,
+  dialog,
 } = require("electron");
 const path = require("path"),
   fs = require("fs");
 const { autoUpdater } = require("electron-updater");
 const { createUpdater } = require("./updater");
 let updater;
+let studioWindow, studio;
+const { createStudio } = require("./studio-service");
+function openStudio() {
+  if (studioWindow && !studioWindow.isDestroyed()) {
+    studioWindow.show();
+    studioWindow.focus();
+    return;
+  }
+  studioWindow = new BrowserWindow({
+    width: 1000,
+    height: 800,
+    minWidth: 600,
+    minHeight: 500,
+    title: "兔兔圖片工作室",
+    webPreferences: {
+      preload: path.join(__dirname, "preload.js"),
+      contextIsolation: true,
+      nodeIntegration: false,
+      sandbox: true,
+    },
+  });
+  studioWindow.loadFile(path.join(__dirname, "studio.html"));
+  studioWindow.webContents.setWindowOpenHandler(() => ({ action: "deny" }));
+  studioWindow.webContents.on("will-navigate", (e) => e.preventDefault());
+  studioWindow.on("closed", () => {
+    studioWindow = null;
+  });
+}
+function studioTrusted(e) {
+  return (
+    studioWindow &&
+    !studioWindow.isDestroyed() &&
+    e.sender === studioWindow.webContents
+  );
+}
 const CALENDAR = "https://wuwu-rabbit-desk.wuwu5055.chatgpt.site/api/calendar";
 const SOURCE = "https://uch-espacios.publish.ceu.es/VLC_G_MED/calendar";
 let win,
@@ -201,6 +237,67 @@ if (locked)
     ipcMain.handle("update-install", (event) => {
       if (!controlTrusted(event)) throw Error("拒絕存取");
       return updater.install();
+    });
+    studio = createStudio({
+      root: __dirname,
+      userData: app.getPath("userData"),
+    });
+    if (
+      !app.isPackaged &&
+      !studio.status().references &&
+      fs.existsSync(path.join(__dirname, ".studio-references"))
+    ) {
+      const folder = path.join(__dirname, ".studio-references");
+      studio
+        .importReferences(
+          fs.readdirSync(folder).map((f) => path.join(folder, f)),
+          (file) =>
+            nativeImage.createFromPath(file).resize({ width: 1024 }).toPNG(),
+        )
+        .catch(() => {});
+    }
+    ipcMain.handle("studio-open", (e) => {
+      if (!controlTrusted(e)) throw Error("拒絕存取");
+      openStudio();
+      return true;
+    });
+    const studioHandler = (name, fn) =>
+      ipcMain.handle(name, (e, ...args) => {
+        if (!studioTrusted(e)) throw Error("拒絕存取");
+        return fn(...args);
+      });
+    studioHandler("studio-status", () => studio.status());
+    studioHandler("studio-theme", () => studio.randomTheme());
+    studioHandler("studio-generate", (input) => studio.generate(input));
+    studioHandler("studio-photos", async () => {
+      const r = await dialog.showOpenDialog(studioWindow, {
+        title: "選擇同一隻兔子的照片",
+        properties: ["openFile", "multiSelections"],
+        filters: [{ name: "照片", extensions: ["png", "jpg", "jpeg", "webp"] }],
+      });
+      if (r.canceled) return studio.status();
+      return studio.importReferences(r.filePaths, (file) => {
+        const image = nativeImage.createFromPath(file);
+        if (image.isEmpty()) throw Error("無法讀取照片");
+        return image.resize({ width: 1024 }).toPNG();
+      });
+    });
+    studioHandler("studio-key", async () => {
+      const r = await dialog.showOpenDialog(studioWindow, {
+        title: "選擇包含 OPENAI_API_KEY 的設定檔",
+        properties: ["openFile", "showHiddenFiles"],
+      });
+      return r.canceled ? studio.status() : studio.importKey(r.filePaths[0]);
+    });
+    studioHandler("studio-save", async () => {
+      const r = await dialog.showSaveDialog(studioWindow, {
+        defaultPath: path.join(
+          app.getPath("downloads"),
+          "兔兔-" + Date.now() + ".png",
+        ),
+        filters: [{ name: "PNG 圖片", extensions: ["png"] }],
+      });
+      return r.canceled ? false : studio.save(r.filePath);
     });
     const area = screen.getPrimaryDisplay().workArea;
     win = new BrowserWindow({

@@ -1,9 +1,9 @@
-# 兔兔桌面寵物 v4.0.1
+# 兔兔桌面寵物 v4.1.0
 
 ## 下載兔兔
 
-- **Windows：[下載 Windows 安裝程式](https://github.com/wuwu50/Repository-name/releases/download/v4.0.1/RabbitDesktop-4.0.1-win-x64.exe)**
-- **Mac Apple Silicon：[下載 Mac 安裝包](https://github.com/wuwu50/Repository-name/releases/download/v4.0.1/RabbitDesktop-4.0.1-mac-arm64.dmg)**
+- **Windows：[下載 Windows 安裝程式](https://github.com/wuwu50/Repository-name/releases/download/v4.1.0/RabbitDesktop-4.1.0-win-x64.exe)**
+- **Mac Apple Silicon：[下載 Mac 安裝包](https://github.com/wuwu50/Repository-name/releases/download/v4.1.0/RabbitDesktop-4.1.0-mac-arm64.dmg)**
 
 Windows 執行 EXE；Mac 開啟 DMG，將兔兔拖到 Applications。公開 Releases 下載不需登入 GitHub。
 下載連結需等本次修改推送、兩平台打包與發布成功後才可用；若顯示 404，請查看 Actions。
@@ -57,3 +57,11 @@ assets/ 存放圖片；tests/ 存放測試；packaging/ 存放打包、簽章與
 npm test 為模擬測試，涵蓋原有功能及 Windows／Mac 更新分流，不能代替實機互動。CI 額外驗證封裝依賴、資源、更新來源、版本、SHA512，以及 Mac arm64 架構／ad-hoc 簽章。尚需 GitHub CI 成功、Windows 與 Mac 實機安裝，以及兩個版本的升版測試。
 
 詳見 AUTO-UPDATE.md。
+
+## 兔兔圖片工作室（4.1.0）
+
+右下角圓圈 → 兔兔圖片工作室 → 選擇隨機主題，或輸入要求 → 生成圖片 → 下載 PNG。每次生成會傳送參考照片與要求至 OpenAI，依 API 用量計費。
+
+隨機主題優先使用近期節日，並在本機記住近期主題以減少重複。農曆節日由系統農曆日期判斷。圖片會盡量維持同一隻兔子的斑紋與外觀，但生成結果不保證完全相同。
+
+照片與連線設定可匯入最多10張照片，以及包含 OPENAI_API_KEY 的 .env.local 設定檔。金鑰不會顯示於介面或包入安裝檔，原始參考照片不會放進公開儲存庫。開發版會自動載入本機 .studio-references；安裝版第一次使用或換電腦時，請在工作室匯入照片與金鑰設定檔。請勿分享金鑰設定檔。

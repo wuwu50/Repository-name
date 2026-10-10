@@ -149,3 +149,5 @@ vite.config.ts.timestamp-*
 .turbo
 release-v3/
 release-v4/
+
+.studio-references/

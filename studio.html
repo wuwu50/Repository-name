@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; img-src 'self' data:; script-src 'self'; style-src 'self'; connect-src 'none'"
+    />
+    <title>兔兔圖片工作室</title>
+    <link rel="stylesheet" href="studio.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <span>兔兔的創作時光</span>
+        <h1>兔兔圖片工作室</h1>
+        <p>同一隻兔兔，走進不同故事。</p>
+      </header>
+      <div class="layout">
+        <section class="controls">
+          <h2>今天想去哪裡？</h2>
+          <button id="random">🎲 換個隨機主題</button>
+          <p id="theme">可選隨機主題，或直接輸入你的想法。</p>
+          <label for="prompt">告訴兔兔你的想法</label
+          ><textarea
+            id="prompt"
+            maxlength="2000"
+            rows="5"
+            placeholder="例如：讓兔兔穿著小披風，在萬聖節南瓜屋前，水彩風格。"
+          ></textarea
+          ><button id="generate" class="primary">生成圖片</button>
+          <p class="hint">
+            每次生成會上傳參考照片與要求至 OpenAI，依 API
+            用量計費。外觀會盡量保留，結果仍可能有差異。
+          </p>
+          <details>
+            <summary>照片與連線設定</summary>
+            <p id="config"></p>
+            <button id="photos">匯入兔兔照片（最多10張）</button
+            ><button id="key">匯入金鑰設定檔</button>
+            <p class="hint">照片與金鑰只儲存在這台電腦。換電腦時需重新匯入。</p>
+          </details>
+          <p id="status" role="status" aria-live="polite">準備好開始創作。</p>
+        </section>
+        <section class="preview" aria-label="圖片預覽">
+          <div id="empty">
+            🐇
+            <p>兔兔的新故事會出現在這裡</p>
+          </div>
+          <img id="image" hidden alt="生成的兔兔主題圖片" /><button
+            id="download"
+            disabled
+          >
+            下載 PNG 圖片
+          </button>
+        </section>
+      </div>
+    </main>
+    <script src="studio.js"></script>
+  </body>
+</html>

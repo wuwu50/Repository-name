@@ -120,3 +120,11 @@ document.querySelector("#downloadUpdate").onclick = () =>
   updateAction(() => desktopPet.downloadUpdate());
 document.querySelector("#installUpdate").onclick = () =>
   updateAction(() => desktopPet.installUpdate());
+
+document.querySelector("#studio").onclick = async () => {
+  try {
+    await desktopPet.studioOpen();
+  } catch {
+    notice.textContent = "圖片工作室無法開啟，請重啟兔兔。";
+  }
+};
