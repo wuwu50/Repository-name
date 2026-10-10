@@ -1,6 +1,6 @@
 {
   "name": "rabbit-desktop",
-  "version": "4.2.1",
+  "version": "4.2.2",
   "description": "兔兔桌面寵物",
   "main": "main.js",
   "author": "Wu Wu",
@@ -13,7 +13,7 @@
     "release:mac": "node packaging/build-release.cjs mac",
     "release:windows": "node packaging/build-release.cjs windows",
     "test:updates": "node tests/updater-check.cjs",
-    "test": "node tests/state-check.cjs && node tests/controls-check.cjs && node tests/dock-check.cjs && node tests/updater-check.cjs && node tests/mac-updater-check.cjs && node tests/studio-check.cjs && node tests/local-ai-check.cjs && node tests/studio-ui-check.cjs && node tests/mac-installer-check.cjs"
+    "test": "node tests/state-check.cjs && node tests/controls-check.cjs && node tests/dock-check.cjs && node tests/updater-check.cjs && node tests/mac-updater-check.cjs && node tests/mac-installer-check.cjs"
   },
   "devDependencies": {
     "electron": "44.5.1",

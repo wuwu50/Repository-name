@@ -1,15 +1,15 @@
-# 兔兔桌面寵物 v4.2.1
+# 兔兔桌面寵物 v4.2.2
 
 ## 下載兔兔
 
-- **Windows：[下載 Windows 安裝程式](https://github.com/wuwu50/Repository-name/releases/download/v4.2.1/RabbitDesktop-4.2.1-win-x64.exe)**
-- **Mac Apple Silicon：[下載 Mac 安裝包](https://github.com/wuwu50/Repository-name/releases/download/v4.2.1/RabbitDesktop-4.2.1-mac-arm64.pkg)**
+- **Windows：[下載 Windows 安裝程式](https://github.com/wuwu50/Repository-name/releases/download/v4.2.2/RabbitDesktop-4.2.2-win-x64.exe)**
+- **Mac Apple Silicon：[下載 Mac 安裝包](https://github.com/wuwu50/Repository-name/releases/download/v4.2.2/RabbitDesktop-4.2.2-mac-arm64.pkg)**
 
 Windows 執行 EXE；Mac 開啟 PKG，依系統安裝提示完成，不需拖曳檔案。公開 Releases 下載不需登入 GitHub。
 下載連結需等本次修改推送、兩平台打包與發布成功後才可用；若顯示 404，請查看 Actions。
 Mac 尚無正式 Developer ID／公證，首次開啟可能需要系統允許。
 
-v4.0.1 修正側躺睡姿多出第三隻耳朵，保留四種睡姿。Windows 可在程式內檢查、下載、確認後安裝更新；Mac 4.2.1 起可在程式內下載 PKG 並開啟系統安裝程式。
+v4.0.1 修正側躺睡姿多出第三隻耳朵，保留四種睡姿。Windows 可在程式內檢查、下載、確認後安裝更新；Mac 4.2.2 起可在程式內下載 PKG 並開啟系統安裝程式。
 
 保留兔兔互動、抓起拖曳、拍拍、探頭、聞聞、吃草、睡覺、便便清理、自主跳動、課表、透明視窗滑鼠穿透、控制台位置記憶及桌面捷徑。原有 userData、settings-v3.json 和 calendar-cache.json 不變。
 
@@ -22,7 +22,7 @@ v4.0.1 修正側躺睡姿多出第三隻耳朵，保留四種睡姿。Windows �
 
 Mac 目前是 ad-hoc 本機簽章，沒有正式 Developer ID 或 Apple 公證，可能被 Gatekeeper 阻擋。確認來源後使用系統「隱私權與安全性 → 仍要開啟」。不提供移除安全保護的腳本，也不再依賴舊 README 提及但未附帶的「安裝並啟動.command」。Windows 尚無發行者憑證，可能出現 SmartScreen 提示。
 
-正式版啟動 15 秒後、每小時檢查新版。右下角功能選單可檢查更新；Windows 可下載、顯示進度，確認「重新啟動更新」才安裝，一般退出不安裝。Mac 4.2.1 起使用「下載並安裝新版」，完成下載與 SHA512 校驗後開啟系統安裝程式並退出兔兔；系統可能要求確認與管理員密碼，安裝完成會嘗試重開兔兔。
+正式版啟動 15 秒後、每小時檢查新版。右下角功能選單可檢查更新；Windows 可下載、顯示進度，確認「重新啟動更新」才安裝，一般退出不安裝。Mac 4.2.2 起使用「下載並安裝新版」，完成下載與 SHA512 校驗後開啟系統安裝程式並退出兔兔；系統可能要求確認與管理員密碼，安裝完成會嘗試重開兔兔。
 
 舊 v3 沒有更新器，需先手動安裝正式 v4 一次。僅原始碼內有更新程式不代表已下載的舊程式會自行更新。
 
@@ -48,7 +48,7 @@ assets/ 存放圖片；tests/ 存放測試；packaging/ 存放打包、簽章與
 1. 在 GitHub Desktop 提交修改並 Push origin 到 main。
 2. GitHub 自動測試、打包 Windows 與 Mac，檢查封裝、更新資訊與雜湊。
 3. 兩平台都成功後自動建立版本標籤、公開 GitHub Release，不需另外手動建立標籤。
-4. 已安裝 v4 的 Windows 使用者可按「檢查更新 → 下載更新 → 重新啟動更新」。Mac 4.2.1 起按「下載並安裝新版」並依系統提示完成。舊版 Mac 請先從上方 PKG 連結安裝一次。
+4. 已安裝 v4 的 Windows 使用者可按「檢查更新 → 下載更新 → 重新啟動更新」。Mac 4.2.2 起按「下載並安裝新版」並依系統提示完成。舊版 Mac 請先從上方 PKG 連結安裝一次。
 
 手動 Run workflow 預設只打包；勾選 publish 才公開。每次修改程式或圖片都需要提高 package.json 與 package-lock.json 版本。已公開版本不覆蓋；同版本推送只建置、不替換既有 Release。發行使用 GitHub 內建 GITHUB_TOKEN，不把 token 放入安裝包。
 
@@ -58,18 +58,5 @@ npm test 為模擬測試，涵蓋原有功能及 Windows／Mac 更新分流，�
 
 詳見 AUTO-UPDATE.md。
 
-## 兔兔圖片工作室（4.1.0）
 
-右下角圓圈 → 兔兔圖片工作室 → 選擇隨機主題，或輸入要求 → 生成圖片 → 下載 PNG。雲端模式會傳送參考照片與要求至 OpenAI，依 API 用量計費；預設本機模式免費且不上傳照片。
-
-隨機主題優先使用近期節日，並在本機記住近期主題以減少重複。農曆節日由系統農曆日期判斷。圖片會盡量維持同一隻兔子的斑紋與外觀，但生成結果不保證完全相同。
-
-照片與連線設定可匯入最多10張照片，以及包含 OPENAI_API_KEY 的 .env.local 設定檔。金鑰不會顯示於介面或包入安裝檔，原始參考照片不會放進公開儲存庫。開發版會自動載入本機 .studio-references；安裝版第一次使用或換電腦時，請在工作室匯入照片與金鑰設定檔。請勿分享金鑰設定檔。
-
-## 免費本機生圖（4.2.0）
-
-工作室預設免費本機生成，自動辨識 Windows／Mac 與硬體，確認下載後安裝獨立環境、生圖模型及中文翻譯。Windows NVIDIA 使用 CUDA，Mac Apple Silicon 使用 Metal，其他 Windows 硬體使用較慢的 CPU 模式。
-
-使用方式：右下角圓圈 → 兔兔圖片工作室 → 安裝適合這台電腦的工具 → 確認下載 → 啟動本機生圖 → 匯入照片 → 輸入要求或選擇主題 → 生成 → 下載。請預留28 GB。換電腦需重新安裝本機工具。詳見 [免費本機生圖說明](LOCAL-AI.md)。
-
-驗證範圍：硬體分流、安裝檔與模型校驗程式、10張照片工作流、引擎生命週期、取消操作、本機模式不使用付費API，以及原有桌寵與更新測試。尚未下載完整模型跑真實生圖，Mac尚未實機驗證。
+4.2.2 移除兔兔圖片生成工作室與 AI 安裝功能，保留桌寵互動、課表及 Windows／Mac 更新。Mac 更新不需拖曳 App。

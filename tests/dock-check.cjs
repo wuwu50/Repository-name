@@ -19,7 +19,6 @@ function element() {
   };
 }
 for (const name of [
-  "studio",
   "toggle",
   "panel",
   "notice",
